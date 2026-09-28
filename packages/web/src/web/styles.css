@@ -1,0 +1,176 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --font-display: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink-900: #101216;
+  --color-ink-850: #13161b;
+  --color-ink-800: #16181d;
+  --color-ink-700: #1d2027;
+  --color-ink-600: #262a33;
+  --color-ink-500: #363b47;
+  --color-hi: #f2f4f7;
+  --color-mid: #a4acbb;
+  --color-low: #6b7385;
+
+  --color-coral: #f0435a;
+  --color-coral-dim: #c9364a;
+  --color-teal: #12a594;
+  --color-amber: #f6b13c;
+  --color-violet: #8a7bf0;
+
+  --color-paper: #ffffff;
+  --color-paper-line: #dfe3e8;
+  --color-paper-slot: #f4f6f8;
+  --color-paper-ink: #1b2129;
+  --color-paper-muted: #8b95a1;
+  --color-paper-win-bg: #e6f4f1;
+  --color-paper-win-bar: #12a594;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-ink-900);
+    color: var(--color-hi);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  * {
+    border-color: var(--color-ink-600);
+  }
+  ::selection {
+    background: var(--color-coral);
+    color: #fff;
+  }
+  input,
+  button,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+/* ---------- entrada orquestrada ---------- */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise {
+  animation: rise 0.42s cubic-bezier(0.22, 0.8, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}
+
+/* ---------- folha do chaveamento (clara, igual à impressão) ---------- */
+.sheet {
+  background: var(--color-paper);
+  color: var(--color-paper-ink);
+  font-family: var(--font-sans);
+}
+
+.sheet-scale {
+  transform: scale(var(--sheet-scale, 1));
+  transform-origin: top left;
+}
+
+.round-label {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #55616f;
+}
+
+.slot {
+  background: var(--color-paper-slot);
+  border: 1px solid var(--color-paper-line);
+  color: var(--color-paper-ink);
+}
+
+.slot-win {
+  background: var(--color-paper-win-bg);
+  border-color: #bfe3dc;
+}
+
+.connector {
+  position: absolute;
+  background: var(--color-paper-line);
+}
+
+/* ---------- impressão A4 paisagem ---------- */
+@page {
+  size: A4 landscape;
+  margin: 8mm;
+}
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  /* Some a folha do chaveamento fica na pagina; o resto nao ocupa espaco. */
+  body *:not(:has(#print-area)):not(#print-area):not(#print-area *) {
+    display: none !important;
+  }
+  html,
+  body,
+  #root,
+  body :has(#print-area) {
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  body :has(#print-area) {
+    display: block !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  #print-area {
+    position: static !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  /* zoom (e nao transform) para que a paginacao considere o tamanho reduzido */
+  .sheet-scale {
+    transform: none !important;
+    zoom: var(--print-scale, 1) !important;
+  }
+  .sheet-scroll {
+    overflow: visible !important;
+  }
+  .slot,
+  .slot-win,
+  .connector {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
